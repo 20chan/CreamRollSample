@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using CreamRoll;
@@ -21,17 +22,12 @@ namespace CreamRollSample {
     }
 
     public class Counter {
-        private int counter = 0;
+        private Dictionary<string, int> countDict = new Dictionary<string, int>();
 
-
-        [Get("/")]
-        public string Count() {
-            return (++counter).ToString();
-        }
-
-        [Get("/async")]
-        public Task<string> AsyncCount() {
-            return Task.FromResult((++counter).ToString());
+        [Get("/{name}/cnt")]
+        public string Count(RouteServerBase.RouteContext ctx) {
+            countDict.TryAdd(ctx.Query.name, 0);
+            return (++countDict[ctx.Query.name]).ToString();
         }
     }
 }
